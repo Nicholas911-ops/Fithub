@@ -17,8 +17,20 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('admin'); // Add role column with default role 'user'
+            $table->string('role')->default('user'); // Add role column with default role 'user'
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('roles', function (Blueprint $table) { // roles table
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+        Schema::create('role_user', function (Blueprint $table) { //role_user pivot table
+            $table->id();
+            $table->foreignId('role_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -44,6 +56,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('role_user');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

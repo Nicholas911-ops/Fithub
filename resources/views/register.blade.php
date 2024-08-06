@@ -83,7 +83,9 @@
         .checkbox a:hover{
             color:red;
         }
-
+        .login p{
+           font-size:14px;
+        }
 
     </style>
 
@@ -125,6 +127,9 @@
             <input type="submit" value="Register">
         </div>
     </form>
+    <div class="login">
+        <p>Already have an account? <a href="{{ route('login') }}">Log in</a></p>
+    </div>
 </div>
 
 

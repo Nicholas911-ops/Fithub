@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -26,7 +27,7 @@ class AuthController extends Controller
         }
 
         // Create a new user in the database
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -36,26 +37,55 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
     }
 
-        public function login(Request $request)
+    public function login(Request $request)
     {
-        $request->validate([
+        // Validate the login request
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            return redirect()->intended(route('main'));
-        }        
+            $user = Auth::user();
+
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin');
+            } elseif ($user->hasRole('user')) {
+                return redirect()->route('main');
+            } else {
+                return redirect('/main'); // Handle cases where user role is not defined
+            }
+         }
 
         throw ValidationException::withMessages([
             'email' => __('auth.failed'),
         ]);
     }
+
+    public function showAdmin()
+    {
+        return view('admin'); // Assuming 'admin' is the blade view for admin dashboard
+    }
+
     public function showMain()
     {
-        return view('main');
+        return view('main'); // Assuming 'main' is the blade view for user dashboard
     }
+
+    public function showWelcomePage()
+    {
+        return view('welcome'); // welcome page redirection
+    }
+
+    public function getUserCount(): JsonResponse {
+        try {
+            $userCount = User::count();
+            return response()->json(['userCount' => $userCount]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+
 }

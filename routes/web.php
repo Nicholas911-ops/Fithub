@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController; 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController; // Update the namespaces
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\CheckRole; // Update the namespaces
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,11 +17,14 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 // Define route for the registration page
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
-// Define route for the admin dashboard page
-Route::get('admin', [AdminController::class, 'showAdmindashboard'])->name('admin');
+// Define route for displaying the welcome page
+Route::get('welcome', [AuthController::class, 'showWelcomePage'])->name('welcome');
 
-// Define route for the forgot password page
+// Define route for the forgot password page and handle the reset process
 Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
 // Route to handle the registration form submission
 Route::post('register-submit', [AuthController::class, 'register'])->name('register.submit');
@@ -29,30 +32,14 @@ Route::post('register-submit', [AuthController::class, 'register'])->name('regis
 // Route to handle the login authentication
 Route::post('login-submit', [AuthController::class, 'login'])->name('login.submit');
 
-// Route to handle the login main page access
-Route::get('main', [AuthController::class, 'showMain'])->name('main');
-
-// Routes for assigning roles and checking roles
-Route::post('/assign-admin-role', [UserController::class, 'assignAdminRole']);
-Route::get('/check-user-role/{id}', [UserController::class, 'checkUserRole']);
-
-// Admin-only routes
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    });
+Route::group(['CheckRole' => ['role:admin']], function () {
+    Route::get('/admin', [AuthController::class, 'showAdmin'])->name('admin');
+    // Other admin routes
 });
 
-// User-only routes (accessible by admins too)
-Route::group(['middleware' => ['auth', 'role:user']], function () {
-    Route::get('/user', function () {
-        return view('user.dashboard');
-    });
+Route::group(['CheckRole' => ['role:user']], function () {
+    Route::get('/main', [AuthController::class, 'showMain'])->name('main');
+    // Other user routes
 });
 
-// Authenticated user routes
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
-});
+Route::get('/user-count', [AuthController::class, 'getUserCount']);

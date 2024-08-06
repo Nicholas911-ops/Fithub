@@ -1,25 +1,36 @@
 <?php
 
+// app/Http/Middleware/CheckRole.php
+
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CheckRole
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $role
+     * @return mixed
+     */
     public function handle($request, Closure $next, $role)
     {
+
+        
         if (!Auth::check()) {
-            return redirect('/'); // Redirect to home if user is not authenticated
+            return redirect('/login'); // Redirect to login if not authenticated
         }
 
-        // Allow access if user has the specified role or is an admin
         $user = Auth::user();
-        if ($user->roles()->where('name', $role)->exists() || $user->roles()->where('name', 'admin')->exists()) {
-            return $next($request);
+        if ($user->hasRole($role)) {
+            return $next($request); // User has the role, proceed with the request
         }
 
-        return redirect('/'); // Redirect to home if user does not have the role
+        return redirect('/main'); // User does not have the required role, redirect to unauthorized page
     }
 }
-

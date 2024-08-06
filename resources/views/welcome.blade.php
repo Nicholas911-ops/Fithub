@@ -107,7 +107,6 @@
         <p>Your ultimate fitness companion</p>
         <div class="cta-buttons">
          <a href="{{ route('login') }}">Login</a>
-         
          <a href="{{ route('register') }}">Create account</a>
         </div>
 
