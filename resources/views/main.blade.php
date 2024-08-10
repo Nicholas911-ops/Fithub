@@ -207,6 +207,7 @@
         </div>
       </div>
     </main>
+
   </div>
 </div>
 
@@ -279,52 +280,65 @@
 
     function loadContent(key) {
       let contentHtml = '';
+
       switch (key) {
+
         case 'workouts':
           contentHtml = `
             <div class="row">
               ${generateWorkoutCards()}
             </div>`;
           break;
-        case 'shop':
-          contentHtml = `
-            <div class="row">
-              ${displayShopCards()}
-            </div>`;
-          break;
+          
+          case 'shop':
+            // Display a loading message or spinner while fetching products
+            contentHtml = `
+                <div class="row">
+                    <p>Loading products...</p>
+                </div>`;
+            
+            // Insert the contentHtml to the main content area first
+            document.getElementById('main-content').innerHTML = contentHtml;
+
+            // Then fetch the products and update the content dynamically
+            fetchProducts();
+            break;
+
           case 'mentor-mode':
-      contentHtml = `
-        <div class="mentor-mode-container">
-          <div class="card card-custom">
-            <div class="card-body">
-              <h5 class="card-title">Mentor Mode</h5>
-              <p class="card-text">Connect with fitness mentors.</p>
-              <div id="mentorCarousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                  ${generateMentorProfiles()}
+           contentHtml = `
+            <div class="mentor-mode-container">
+              <div class="card card-custom">
+                <div class="card-body">
+                  <h5 class="card-title">Mentor Mode</h5>
+                  <p class="card-text">Connect with fitness mentors.</p>
+                  <div id="mentorCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      ${generateMentorProfiles()}
+                    </div>
+                    <a class="carousel-control-prev" href="#mentorCarousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#mentorCarousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
                 </div>
-                <a class="carousel-control-prev" href="#mentorCarousel" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#mentorCarousel" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
               </div>
-            </div>
-          </div>
-          <div class="mentor-list">
+              <div class="mentor-list">
             ${generateMentorList()}
           </div>
         </div>`;
       break;
+
         case 'meal-plans':
           contentHtml = `
             <div class="row">
               ${generateMealPlanCards()}
             </div>`;
           break;
+
         case 'fitness-tracker':
           contentHtml = `
             <div class="card card-custom">
@@ -334,6 +348,7 @@
               </div>
             </div>`;
           break;
+
         case 'notifications':
           contentHtml = `
             <div class="card card-custom">
@@ -343,6 +358,7 @@
               </div>
             </div>`;
           break;
+
           case 'cart':
           contentHtml = `
           <div class="cart-container">
@@ -399,157 +415,47 @@
       `).join('');
     }
 
-    const products = [
-        { id: 1, name: "Yoga Mat", description: "High quality yoga mat", price: 20.00, img: "{{ asset('images/yogamat.jpeg') }}" },
-        { id: 2, name: "Dumbbells", description: "Set of 2 dumbbells", price: 40.00, img: "{{ asset('images/Dumbell.jpeg') }}" },
-        { id: 3, name: "Running Shoes", description: "Comfortable running shoes", price: 60.00, img: "{{ asset('images/shoes.jpeg') }}" },
-        { id: 4, name: "Fitness Tracker", description: "Track your fitness progress", price: 80.00, img: "{{ asset('images/tracker.jpeg') }}" },
-        { id: 5, name: "Protein Powder", description: "High protein supplement", price: 30.00, img: "{{ asset('images/proteinpowder.jpeg') }}" },
-        { id: 6, name: "Gym Bag", description: "Spacious gym bag", price: 25.00, img: "{{ asset('images/gymbag.jpeg') }}" }
-    ];
+    // Shop side bar menu logic
+    function fetchProducts() {
+          fetch('/api/products')
+              .then(response => response.json())
+              .then(products => {
+                  // Dynamically update the content area with fetched products
+                  displayShopCards(products);
+              })
+          .catch(error => {
+            console.error('Error fetching products:', error);
+            alert('Failed to fetch products. Please try again later.');
+             });
+      }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        displayShopCards();
-        updateCartNotification();
-    });
+      function displayShopCards(products) {
+          const productList = document.getElementById('main-content');
+          productList.innerHTML = `
+              <div class="row">
+                  ${generateShopCards(products)}
+              </div>`;
+      }
 
-    function displayShopCards() {
-        const productList = document.getElementById('product-list');
-        productList.innerHTML = generateShopCards();
-    }
+      function generateShopCards(products) {
+          return products.map(product => `
+              <div class="col-md-4 mb-4">
+                  <div class="card">
+                      <img src="/storage/${product.product_image}" class="card-img-top product-image" alt="${product.product_name}">
+                      <div class="card-body">
+                          <h5 class="card-title">${product.product_name}</h5>
+                          <p class="card-text">${product.product_description}</p>
+                          <p class="card-text"><strong>$${product.product_price.toFixed(2)}</strong></p>
+                          <button class="btn btn-primary add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                      </div>
+                  </div>
+              </div>
+          `).join('');
+      }
 
-    function generateShopCards() {
-        return products.map(product => `
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="${product.img}" class="card-img-top product-image" alt="${product.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text">${product.description}</p>
-                        <p class="card-text"><strong>$${product.price.toFixed(2)}</strong></p>
-                        <button class="btn btn-primary add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function addToCart(productId) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProductIndex = cart.findIndex(item => item.id === productId);
-        if (existingProductIndex !== -1) {
-            cart[existingProductIndex].quantity += 1;
-        } else {
-            cart.push({ id: productId, quantity: 1 });
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartNotification();
-    }
-
-    function updateCartNotification() {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const cartCountElement = document.getElementById('cart-count');
-        cartCountElement.innerText = cart.length;
-        cartCountElement.style.display = cart.length > 0 ? 'inline' : 'none';
-    }
-
-    function displayCart() {
-        const mainContent = document.getElementById('main-content');
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let subtotal = 0;
-
-        const cartItemsHtml = cart.map(item => {
-            const product = products.find(p => p.id === item.id);
-            if (product) {
-                subtotal += product.price * item.quantity;
-                return `
-                    <div class="cart-item">
-                        <div class="product-image">
-                            <img src="${product.img}" alt="${product.name}" style="height: 100px; object-fit: cover;">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-name">${product.name}</h3>
-                            <p class="product-description">${product.description}</p>
-                            <p class="product-price">$${(product.price * item.quantity).toFixed(2)}</p>
-                            <div class="quantity">
-                                <label for="quantity">Quantity:</label>
-                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-product-id="${product.id}">
-                            </div>
-                            <button class="btn btn-danger remove-btn" onclick="removeItem(${product.id})">Remove</button>
-                        </div>
-                    </div>
-                `;
-            }
-        }).join('');
-
-        const taxRate = 0.10;
-        const tax = subtotal * taxRate;
-        const total = subtotal + tax;
-
-        mainContent.innerHTML = `
-            <div class="card">
-                <div class="card-body">
-                    <h2>Shopping Cart</h2>
-                    <div class="cart-items">${cartItemsHtml}</div>
-                    <div class="cart-summary mt-4">
-                        <h3>Cart Summary</h3>
-                        <p>Subtotal: <span class="subtotal">$${subtotal.toFixed(2)}</span></p>
-                        <p>Tax: <span class="tax">$${tax.toFixed(2)}</span></p>
-                        <p>Total: <span class="total">$${total.toFixed(2)}</span></p>
-                        <button class="checkout-btn btn btn-success">Proceed to Checkout</button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        attachCartEventListeners();
-    }
-
-    function removeItem(productId) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart = cart.filter(item => item.id !== productId);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        displayCart();
-        updateCartNotification();
-    }
-
-    function attachCartEventListeners() {
-        const quantityInputs = document.querySelectorAll('.quantity-input');
-        const removeButtons = document.querySelectorAll('.remove-btn');
-
-        quantityInputs.forEach(input => {
-            input.addEventListener('change', updateCartQuantity);
-        });
-
-        removeButtons.forEach(button => {
-            button.addEventListener('click', removeItem);
-        });
-    }
-
-    function updateCartQuantity(event) {
-        const input = event.target;
-        const productId = parseInt(input.getAttribute('data-product-id'));
-        const newQuantity = parseInt(input.value);
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        const productIndex = cart.findIndex(item => item.id === productId);
-        if (productIndex !== -1) {
-            cart[productIndex].quantity = newQuantity;
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        displayCart();
-        updateCartNotification();
-    }
-
-    document.getElementById('cartLink').addEventListener('click', (event) => {
-        event.preventDefault();
-        displayCart();
-    });
-
-    // Initialize the cart notification count on page load
-    updateCartNotification();
+   
     
-      function generateMentorProfiles() {
+      function generateMentorProfiles() { 
         const mentors = [
           { name: 'John Doe', specialty: 'Strength Training', image: 'mentor1.jpg' },
           { name: 'Jane Smith', specialty: 'Yoga', image: 'mentor2.jpg' },

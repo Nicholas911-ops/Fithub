@@ -329,15 +329,16 @@
     <div class="sidebar">
         
         <ul>
-            <li><a id="sidebar-dashboard" href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a id="sidebar-users" href="#users"><i class="fas fa-user-cog"></i> Users</a></li>
-            <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-video"></i> Videos</a></li>
-            <li><a id="sidebar-manage-users" href="#manage-users"><i class="fas fa-box"></i> Manage Users</a></li>
-            <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-video"></i> Manage Videos</a></li>
-            <li><a id="sidebar-orders" href="#orders"><i class="fas fa-video"></i> Orders</a></li>
-            <li><a id="sidebar-orders" href="#orders"><i class="fas fa-chart-bar"></i> Reports</a></li>
-            <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-globe"></i> Regions</a></li>
-            <li><a id="sidebar-orders" href="#orders"><i class="fas fa-cog"></i> Settings</a></li>
+           <li><a id="sidebar-dashboard" href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+           <li><a id="sidebar-users" href="#users"><i class="fas fa-users-cog"></i> Users</a></li>
+           <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-video"></i> Videos</a></li>
+           <li><a id="sidebar-manage-users" href="#manage-mentors"><i class="fas fa-user-graduate"></i> Mentors</a></li>
+           <li><a id="sidebar-manage-sessions" href="#manage-sessions"><i class="fas fa-calendar-alt"></i> Sessions</a></li>
+           <li><a id="sidebar-orders" href="#orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+           <li><a id="sidebar-reports" href="#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+           <li><a id="sidebar-manage-users" href="#manage-users"><i class="fas fa-users"></i> Manage Users</a></li>
+           <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-video"></i> Manage Videos</a></li>
+
         </ul>
     </div>
     <div class="main-content">
@@ -376,6 +377,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="quick-actions">
                 <button class="action-btn" onclick="showContent('#manage-users')"><i class="fas fa-user-plus"></i> Revenue Oversight</button>
                 <button class="action-btn" onclick="showContent('#manage-videos')"><i class="fas fa-plus-circle"></i>Generate Reports</button>
@@ -440,6 +442,7 @@
                 </tbody>
             </table>
         </div>
+
         <div id="orders" class="section">
             <h1>Orders</h1>
             <table id="orders-table">
@@ -458,6 +461,7 @@
                 </tbody>
             </table>
         </div>
+
         <div id="users" class="section">
             <h1>Orders</h1>
             <table id="users-table">
@@ -474,9 +478,46 @@
                 </tbody>
             </table>
         </div>
+
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
+       // Getting the users table in the frontend logic
+       $(document).ready(function() {
+    function fetchUsers() {
+        $.ajax({
+            url: '/users',
+            method: 'GET',
+            success: function(data) {
+                let rows = '';
+                data.forEach(user => {
+                    rows += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.role}</td>
+                        </tr>
+                    `;
+                });
+                $('#users-table tbody').html(rows);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Failed to fetch users: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+    }
+
+    // Initial load
+    fetchUsers();
+
+    // Optionally, set an interval to refresh the data periodically
+    setInterval(fetchUsers, 30000); // Refresh every 30 seconds
+});
+
+
+    // User count card display
         fetch('/user-count')
             .then(response => {
                 if (!response.ok) {
@@ -499,7 +540,7 @@
                 userCountElement.textContent = 'Error';
             });
 
-
+  
     
         document.addEventListener('DOMContentLoaded', function () {
             const sections = document.querySelectorAll('.section');

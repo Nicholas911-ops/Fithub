@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\JsonResponse; //default Laravel response type for JSON responses.
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController; 
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\CheckRole; // Update the namespaces
+use App\Models\Products; // Import the Products model
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,5 +43,12 @@ Route::group(['CheckRole' => ['role:user']], function () {
     Route::get('/main', [AuthController::class, 'showMain'])->name('main');
     // Other user routes
 });
+
+Route::get('/products', function (): JsonResponse {
+    $products = Products::all();// Use the correct model class name
+    return response()->json($products);
+});
+
+Route::get('/users', [AuthController::class, 'getUsers']);
 
 Route::get('/user-count', [AuthController::class, 'getUserCount']);
