@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\JsonResponse; //default Laravel response type for JSON responses.
+use Illuminate\Http\JsonResponse; // default Laravel response type for JSON responses.
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController; 
 use App\Http\Controllers\AuthController;
-use App\Http\Middleware\CheckRole; // Update the namespaces
+use App\Http\Middleware\CheckRole; // Middleware for role-checking
 use App\Models\Products; // Import the Products model
 
 Route::get('/', function () {
@@ -34,21 +34,24 @@ Route::post('register-submit', [AuthController::class, 'register'])->name('regis
 // Route to handle the login authentication
 Route::post('login-submit', [AuthController::class, 'login'])->name('login.submit');
 
-Route::group(['CheckRole' => ['role:admin']], function () {
+Route::group(['CheckRole' => 'role:admin'], function () {
     Route::get('/admin', [AuthController::class, 'showAdmin'])->name('admin');
     // Other admin routes
 });
 
-Route::group(['CheckRole' => ['role:user']], function () {
+Route::group(['CheckRole' => 'role:user'], function () {
     Route::get('/main', [AuthController::class, 'showMain'])->name('main');
     // Other user routes
 });
 
+// Products API endpoint
 Route::get('/products', function (): JsonResponse {
-    $products = Products::all();// Use the correct model class name
+    $products = Products::all(); // Use the correct model class name
     return response()->json($products);
 });
 
+// Users API endpoint
 Route::get('/users', [AuthController::class, 'getUsers']);
 
+// User count API endpoint
 Route::get('/user-count', [AuthController::class, 'getUserCount']);

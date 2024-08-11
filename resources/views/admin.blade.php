@@ -5,301 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fithub Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            flex-direction: column; /* Modified to accommodate the header */
-        }
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
-        .header {
-            width: 100%;
-            background-color: #2c3e50;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 7px 14px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header .logo {
-            display: flex;
-            align-items: center;
-            flex-basis: 30%; /* Adjust flex-basis for logo */
-        }
-
-        .header .logo img {
-            height: 40px;
-            margin-right: 10px;
-            border-radius: 10%;
-        }
-
-        .header .search-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center; /* Align items vertically */
-            position: relative;
-            flex-basis: 40%; /* Adjust flex-basis for search bar */
-        }
-
-        .header .search-bar input {
-            width: 100%;
-            padding: 8px 35px 8px 15px; /* Adjust padding for search icon */
-            border: none;
-            border-radius: 25px;
-        }
-
-        .header .search-bar .search-icon {
-            position: absolute;
-            right: 10px;
-            color: #aaa;
-        }
-
-        .header .profile {
-            display: flex;
-            align-items: center;
-            flex-basis: 30%; /* Adjust flex-basis for profile */
-            justify-content: center; /* Align profile to the right */
-        }
-
-        .header .profile img {
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 18px;
-        }
-
-        .header .profile span {
-            display: flex;
-            align-items: center;
-        }
-
-        .header .profile span i {
-            margin-left: 10px;
-        }
-
-
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            height: 100vh;
-            position: fixed;
-            top: 60px; /* Adjusted to make space for the header */
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.5em;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 20px 0;
-        }
-
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .sidebar ul li a:hover {
-            background-color: #1abc9c;
-        }
-
-        .sidebar ul li a i {
-            margin-right: 10px;
-        }
-
-        .main-content {
-            margin-left: 270px;
-            margin-top: 80px; /* Adjusted to make space for the header */
-            padding: 20px;
-            flex: 1;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .form-container h2 {
-            margin-top: 0;
-        }
-
-        .form-container label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            padding: 10px 20px;
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .form-container button:hover {
-            background-color: #3498db;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        .intro {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            margin-left: 15px;
-        }
-
-        .dashboard-cards {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 23%;
-            margin-right: 10px;
-            margin-left: 15px;
-        }
-
-        .card-icon {
-            font-size: 3em;
-            color: #3498db;
-            margin-bottom: 10px;
-        }
-
-        .card-content h3 {
-            margin: 0;
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        .card-content p {
-            margin: 5px 0 0;
-            font-size: 1.5em;
-            color: #3498db;
-        }
-
-        .quick-actions {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .action-btn {
-            background-color: #2980b9;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .action-btn:hover {
-            background-color: #3498db;
-        }
-
-        .profile {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-menu {
-            display: none; /* Hide the dropdown menu by default */
-            position: absolute;
-            top: 100%; /* Position the menu below the profile section */
-            right: 17%;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000; /* Ensure the menu is on top of other elements */
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
-
-    </style>
 </head>
 <body>
     <div class="header">
@@ -352,7 +59,7 @@
                     <div class="card-icon"><i class="fas fa-users"></i></div>
                     <div class="card-content">
                         <h3>Users</h3>
-                        <p class="user-count">65</p>
+                        <p class="user-count"></p>
                     </div>
                 </div>
                 <div class="card">
@@ -463,7 +170,7 @@
         </div>
 
         <div id="users" class="section">
-            <h1>Orders</h1>
+            <h1>Users</h1>
             <table id="users-table">
                 <thead>
                     <tr>
@@ -483,38 +190,40 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
-       // Getting the users table in the frontend logic
-       $(document).ready(function() {
-    function fetchUsers() {
-        $.ajax({
-            url: '/users',
-            method: 'GET',
-            success: function(data) {
-                let rows = '';
-                data.forEach(user => {
-                    rows += `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
-                            <td>${user.role}</td>
-                        </tr>
-                    `;
-                });
-                $('#users-table tbody').html(rows);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('Failed to fetch users: ' + textStatus + ' - ' + errorThrown);
-            }
-        });
-    }
+    // Getting the users table in the frontend logic
+        $(document).ready(function() {
+        function fetchUsers() {
+            $.ajax({
+                url: '/users',
+                method: 'GET',
+                success: function(data) {
+                    console.log(data); // Ensure data structure matches expectations
+                    let rows = '';
+                    data.forEach(user => {
+                        rows += `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td>${user.role}</td>
+                            </tr>
+                        `;
+                    });
+                    $('#users-table tbody').html(rows);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Failed to fetch users:', textStatus, errorThrown);
+                }
+            });
+        }
 
-    // Initial load
-    fetchUsers();
+        // Initial load
+        fetchUsers();
 
-    // Optionally, set an interval to refresh the data periodically
-    setInterval(fetchUsers, 30000); // Refresh every 30 seconds
-});
+        // Optionally, set an interval to refresh the data periodically
+        setInterval(fetchUsers, 30000); // Refresh every 30 seconds
+    });
+
 
 
     // User count card display

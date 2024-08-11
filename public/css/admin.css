@@ -1,20 +1,91 @@
-/*  admin page css*/
 
- body {
+         body {
             font-family: Arial, sans-serif;
             display: flex;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            flex-direction: column; /* Modified to accommodate the header */
         }
 
+        .header {
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            flex-basis: 30%; /* Adjust flex-basis for logo */
+        }
+
+        .header .logo img {
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 10%;
+        }
+
+        .header .search-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Align items vertically */
+            position: relative;
+            flex-basis: 40%; /* Adjust flex-basis for search bar */
+        }
+
+        .header .search-bar input {
+            width: 100%;
+            padding: 8px 35px 8px 15px; /* Adjust padding for search icon */
+            border: none;
+            border-radius: 25px;
+        }
+
+        .header .search-bar .search-icon {
+            position: absolute;
+            right: 10px;
+            color: #aaa;
+        }
+
+        .header .profile {
+            display: flex;
+            align-items: center;
+            flex-basis: 30%; /* Adjust flex-basis for profile */
+            justify-content: center; /* Align profile to the right */
+        }
+
+        .header .profile img {
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 18px;
+        }
+
+        .header .profile span {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .profile span i {
+            margin-left: 10px;
+        }
+
+
         .sidebar {
-            width: 250px;
+            width: 220px;
             background-color: #2c3e50;
             color: white;
             padding: 20px;
             height: 100vh;
             position: fixed;
+            top: 60px; /* Adjusted to make space for the header */
         }
 
         .sidebar h2 {
@@ -52,6 +123,7 @@
 
         .main-content {
             margin-left: 270px;
+            margin-top: 80px; /* Adjusted to make space for the header */
             padding: 20px;
             flex: 1;
         }
@@ -132,12 +204,12 @@
             font-weight: bold;
         }
 
-        .intro{
+        .intro {
             margin-top: 10px;
             margin-bottom: 10px;
             margin-left: 15px;
-            
         }
+
         .dashboard-cards {
             display: flex;
             justify-content: space-around;
@@ -152,8 +224,8 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 23%;
-            margin-right:10px;
-            margin-left:15px;
+            margin-right: 10px;
+            margin-left: 15px;
         }
 
         .card-icon {
@@ -184,5 +256,40 @@
             color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 5
+            border-radius: 5px;
+            cursor: pointer;
         }
+
+        .action-btn:hover {
+            background-color: #3498db;
+        }
+
+        .profile {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none; /* Hide the dropdown menu by default */
+            position: absolute;
+            top: 100%; /* Position the menu below the profile section */
+            right: 17%;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Ensure the menu is on top of other elements */
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+   

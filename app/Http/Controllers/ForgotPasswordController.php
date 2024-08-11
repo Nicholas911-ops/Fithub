@@ -38,7 +38,7 @@
        // Show the password reset form
        public function showResetForm($token)
        {
-           return view('auth.passwords.reset', ['token' => $token]);
+           return view('passwordresetform', ['token' => $token]);
        }
    
        // Handle the password reset process
