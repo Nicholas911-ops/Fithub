@@ -109,7 +109,7 @@
                 <input type="text" id="remove-username" name="username" required>
                 <button id="remove-user-btn">Remove User</button>
             </div>
-            <table id="users-table">
+            <table id="users-t">
                 <thead>
                     <tr>
                         <th>Username</th>

@@ -3,127 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Fithub- Begin our fitness jorney with us</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://kit.fontawesome.com/c23bb116ef.js"></script>
-  <style>
-    body {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    .container-fluid {
-      flex: 1;
-    }
-
-    .header {
-      background: linear-gradient(to right, #2C3E50, #4CA1AF);
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-      position: relative;
-    }
-    .nav-brand a{
-      font-size:22px;
-    }
-    .nav-brand a i{
-      font-size:22px;
-    }
-
-    .header .nav-item {
-      margin-left: 20px;
-    }
-
-    .sidebar {
-      background-color: #343a40;
-      color: white;
-      min-height: 100vh;
-      padding-top: 20px;
-    }
-
-    .sidebar .nav-link {
-      color: white;
-    }
-
-    .sidebar .nav-link.active {
-      background-color: #495057;
-    }
-    .sidebar .nav-link a:hover {
-      background-color: #355568;
-    }
-
-    .content {
-      padding: 20px;
-    }
-
-    .card-custom {
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
-      margin-bottom: 20px;
-    }
-
-    .card-custom:hover {
-      transform: scale(1.05);
-    }
-
-    .footer {
-      background-color: #343a40;
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-    }
-
-    .product-image {
-      height: 200px;
-      object-fit: cover;
-      border-radius: 15px 15px 0 0;
-    }
-
-    .workout-image, .meal-plan-image {
-      height: 200px;
-      object-fit: cover;
-      border-radius: 15px 15px 0 0;
-    }
-
-
-    .checkout-btn:hover {
-        background-color: #0056b3;
-    }
-
-        /* Dropdown Content (hidden by default) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            color: black;
-            padding: 12px 1px;
-            text-decoration: none;
-            display: block;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {background-color: #f1f1f1}
-
-        /* Show the dropdown menu */
-        .show {display:block;}
-
-  </style>
+  <link rel="stylesheet" href="{{ asset('css/main.css') }}">
   
 </head>
-<body>
+ <body>
 
-<header class="header">
+  <header class="header">
     <div class="container-fluid d-flex justify-content-center align-items-center">
       <a class="navbar-brand" href="main.blade.php">
           <img src="images/logo.png" alt="Fithub Logo" width="30" height="30"> <!-- Logo Image -->
@@ -225,6 +115,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+   <!-- Include JavaScript files here -->
+   <script src="{{ asset('js/fitness.js') }}" defer></script>
 <script>
           // Header section script
           document.getElementById("profileLink").onclick = function(event) {
@@ -408,53 +300,14 @@
             <div class="card-body">
               <h5 class="card-title">${workout.name}</h5>
               <p class="card-text">${workout.description}</p>
-              <a href="#" class="btn btn-primary">Start Workout</a>
+              <a href="#" class="btn btn-primary">View Workouts</a>
             </div>
           </div>
         </div>
       `).join('');
     }
 
-    // Shop side bar menu logic
-    function fetchProducts() {
-          fetch('/api/products')
-              .then(response => response.json())
-              .then(products => {
-                  // Dynamically update the content area with fetched products
-                  displayShopCards(products);
-              })
-          .catch(error => {
-            console.error('Error fetching products:', error);
-            alert('Failed to fetch products. Please try again later.');
-             });
-      }
-
-      function displayShopCards(products) {
-          const productList = document.getElementById('main-content');
-          productList.innerHTML = `
-              <div class="row">
-                  ${generateShopCards(products)}
-              </div>`;
-      }
-
-      function generateShopCards(products) {
-          return products.map(product => `
-              <div class="col-md-4 mb-4">
-                  <div class="card">
-                      <img src="/storage/${product.product_image}" class="card-img-top product-image" alt="${product.product_name}">
-                      <div class="card-body">
-                          <h5 class="card-title">${product.product_name}</h5>
-                          <p class="card-text">${product.product_description}</p>
-                          <p class="card-text"><strong>$${product.product_price.toFixed(2)}</strong></p>
-                          <button class="btn btn-primary add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
-                      </div>
-                  </div>
-              </div>
-          `).join('');
-      }
-
    
-    
       function generateMentorProfiles() { 
         const mentors = [
           { name: 'John Doe', specialty: 'Strength Training', image: 'mentor1.jpg' },
@@ -525,89 +378,10 @@
       document.getElementById('meal-plan-cards').innerHTML = generateMealPlanCards();
     });
 
-    function generateFitnessTracker() {
-      return `
-        <h6>Fitness Log</h6>
-        <div class="mb-3">
-          <label for="dateInput" class="form-label">Date</label>
-          <input type="date" class="form-control" id="dateInput">
-        </div>
-        <div class="mb-3">
-          <label for="workoutInput" class="form-label">Workout</label>
-          <input type="text" class="form-control" id="workoutInput">
-        </div>
-        <div class="mb-3">
-          <label for="durationInput" class="form-label">Duration (mins)</label>
-          <input type="number" class="form-control" id="durationInput">
-        </div>
-        <div class="mb-3">
-          <label for="caloriesInput" class="form-label">Calories Burned</label>
-          <input type="number" class="form-control" id="caloriesInput">
-        </div>
-        <button type="button" class="btn btn-primary" onclick="addFitnessData()">Add to Log</button>
-        <canvas id="fitnessChart" width="400" height="200"></canvas>`;
-    }
-
-    function addFitnessData() {
-      const date = document.getElementById('dateInput').value;
-      const workout = document.getElementById('workoutInput').value;
-      const duration = document.getElementById('durationInput').value;
-      const calories = document.getElementById('caloriesInput').value;
-
-      if (!date || !workout || !duration || !calories) {
-        alert('Please fill in all fields');
-        return;
-      }
-
-      let fitnessData = JSON.parse(localStorage.getItem('fitnessData')) || [];
-      fitnessData.push({ date, workout, duration, calories });
-      localStorage.setItem('fitnessData', JSON.stringify(fitnessData));
-
-      renderFitnessChart();
-    }
-
-    function renderFitnessChart() {
-      let fitnessData = JSON.parse(localStorage.getItem('fitnessData')) || [];
-      let labels = fitnessData.map(entry => entry.date);
-      let data = fitnessData.map(entry => entry.calories);
-
-      const ctx = document.getElementById('fitnessChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Calories Burned',
-            data: data,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 2,
-            fill: false
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              display: true,
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            },
-            y: {
-              display: true,
-              title: {
-                display: true,
-                text: 'Calories'
-              }
-            }
-          }
-        }
-      });
-    }
 
     loadContent('home');
   });
+
 </script>
 
 

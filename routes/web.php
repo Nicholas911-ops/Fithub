@@ -6,8 +6,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController; 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\FitnessLogController;
 use App\Http\Middleware\CheckRole; // Middleware for role-checking
 use App\Models\Products; // Import the Products model
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,14 +47,12 @@ Route::group(['CheckRole' => 'role:user'], function () {
     // Other user routes
 });
 
-// Products API endpoint
-Route::get('/products', function (): JsonResponse {
-    $products = Products::all(); // Use the correct model class name
-    return response()->json($products);
-});
+Route::post('/fitness-log', [FitnessLogController::class, 'store'])->middleware('auth');
+Route::get('/fitness-log', [FitnessLogController::class, 'index'])->middleware('auth');
 
+// Define the route to fetch all products
+Route::get('/products', [ProductController::class, 'getProducts']);
 // Users API endpoint
 Route::get('/users', [AuthController::class, 'getUsers']);
-
 // User count API endpoint
 Route::get('/user-count', [AuthController::class, 'getUserCount']);

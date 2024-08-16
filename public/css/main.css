@@ -1,0 +1,112 @@
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .container-fluid {
+      flex: 1;
+    }
+
+    .header {
+      background: linear-gradient(to right, #2C3E50, #4CA1AF);
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: relative;
+    }
+    .nav-brand a{
+      font-size:22px;
+    }
+    .nav-brand a i{
+      font-size:22px;
+    }
+
+    .header .nav-item {
+      margin-left: 20px;
+    }
+
+    .sidebar {
+      background-color: #343a40;
+      color: white;
+      min-height: 100vh;
+      padding-top: 20px;
+    }
+
+    .sidebar .nav-link {
+      color: white;
+    }
+
+    .sidebar .nav-link.active {
+      background-color: #495057;
+    }
+    .sidebar .nav-link a:hover {
+      background-color: #355568;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .card-custom {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .card-custom:hover {
+      transform: scale(1.05);
+    }
+
+    .footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .product-image {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .workout-image, .meal-plan-image {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px 15px 0 0;
+    }
+
+
+    .checkout-btn:hover {
+        background-color: #0056b3;
+    }
+
+        /* Dropdown Content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 1px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        /* Show the dropdown menu */
+        .show {display:block;}
+
+  
