@@ -38,8 +38,8 @@
         <ul>
            <li><a id="sidebar-dashboard" href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
            <li><a id="sidebar-users" href="#users"><i class="fas fa-users-cog"></i> Users</a></li>
-           <li><a id="sidebar-manage-videos" href="#manage-videos"><i class="fas fa-video"></i> Videos</a></li>
-           <li><a id="sidebar-manage-users" href="#manage-mentors"><i class="fas fa-user-graduate"></i> Mentors</a></li>
+           <li><a id="sidebar-manage-videos" href="#workout-videos"><i class="fas fa-video"></i> Videos</a></li>
+           <li><a id="sidebar-manage-users" href="#mentors"><i class="fas fa-user-graduate"></i> Mentors</a></li>
            <li><a id="sidebar-manage-sessions" href="#manage-sessions"><i class="fas fa-calendar-alt"></i> Sessions</a></li>
            <li><a id="sidebar-orders" href="#orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
            <li><a id="sidebar-reports" href="#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
@@ -66,7 +66,7 @@
                     <div class="card-icon"><i class="fas fa-video"></i></div>
                     <div class="card-content">
                         <h3>Videos</h3>
-                        <p>45</p>
+                        <p class="video-count"></p>
                     </div>
                 </div>
                 <div class="card">
@@ -109,7 +109,7 @@
                 <input type="text" id="remove-username" name="username" required>
                 <button id="remove-user-btn">Remove User</button>
             </div>
-            <table id="users-t">
+            <table id="users-table">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -186,71 +186,51 @@
             </table>
         </div>
 
+            <div id="mentors" class="section">
+                <h1>Mentors</h1>
+                <table id="mentors-table">
+                    <thead>
+                        <tr>
+                            <th>Mentor ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Bio</th>
+                            <th>Profile</th> <!-- New column for images -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div id="workout-videos" class="section">
+                <h1>Workout Videos</h1>
+                <table id="workout-videos-table">
+                    <thead>
+                        <tr>
+                            <th>Video ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Video URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include your JavaScript files -->
+    <script src="{{ asset('js/videos_mentors.js') }}"></script>
+    <script src="{{ asset('js/users.js') }}"></script>
     <script>
 
-    // Getting the users table in the frontend logic
-        $(document).ready(function() {
-        function fetchUsers() {
-            $.ajax({
-                url: '/users',
-                method: 'GET',
-                success: function(data) {
-                    console.log(data); // Ensure data structure matches expectations
-                    let rows = '';
-                    data.forEach(user => {
-                        rows += `
-                            <tr>
-                                <td>${user.id}</td>
-                                <td>${user.name}</td>
-                                <td>${user.email}</td>
-                                <td>${user.role}</td>
-                            </tr>
-                        `;
-                    });
-                    $('#users-table tbody').html(rows);
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('Failed to fetch users:', textStatus, errorThrown);
-                }
-            });
-        }
-
-        // Initial load
-        fetchUsers();
-
-        // Optionally, set an interval to refresh the data periodically
-        setInterval(fetchUsers, 30000); // Refresh every 30 seconds
-    });
-
-
-
-    // User count card display
-        fetch('/user-count')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const userCountElement = document.querySelector('.user-count');
-                if (data && data.userCount !== undefined) {
-                    userCountElement.textContent = data.userCount;
-                } else {
-                    console.error('Invalid data format:', data);
-                    userCountElement.textContent = 'N/A';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching user count:', error);
-                const userCountElement = document.querySelector('.user-count');
-                userCountElement.textContent = 'Error';
-            });
-
-  
-    
         document.addEventListener('DOMContentLoaded', function () {
             const sections = document.querySelectorAll('.section');
             const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
@@ -292,20 +272,7 @@
                 });
             }
 
-            function renderUsers() {
-                const ordersTableBody = document.getElementById('users-table').querySelector('tbody');
-                ordersTableBody.innerHTML = '';
-                orders.forEach(order => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${order.id}</td>
-                        <td>${order.username}</td>
-                        <td>${order.email}</td>
-                        <td>${order.role}</td>
-                    `;
-                    ordersTableBody.appendChild(row);
-                });
-            }
+            
 
             function renderVideos() {
                 const videosTableBody = document.getElementById('videos-table').querySelector('tbody');

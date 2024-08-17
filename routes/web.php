@@ -7,9 +7,12 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController; 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FitnessLogController;
 use App\Http\Middleware\CheckRole; // Middleware for role-checking
 use App\Models\Products; // Import the Products model
+use App\Models\Mentor;
+use App\Models\WorkoutVideo;
 
 
 Route::get('/', function () {
@@ -53,6 +56,11 @@ Route::get('/fitness-log', [FitnessLogController::class, 'index'])->middleware('
 // Define the route to fetch all products
 Route::get('/products', [ProductController::class, 'getProducts']);
 // Users API endpoint
-Route::get('/users', [AuthController::class, 'getUsers']);
+Route::get('/users', [AdminController::class, 'getUsers']);
 // User count API endpoint
-Route::get('/user-count', [AuthController::class, 'getUserCount']);
+Route::get('/user-count', [AdminController::class, 'getUserCount']);
+// video count API endpoint
+Route::get('/video-count', [AdminController::class, 'getVideoCount']);
+
+Route::get('/mentors', [AdminController::class, 'getMentors']);
+Route::get('/workout-videos', [AdminController::class, 'getWorkoutVideos']);
